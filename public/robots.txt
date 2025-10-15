@@ -1,9 +1,12 @@
-# *
+# robots.txt for https://www.lifepowertrading.com
+
 User-agent: *
 Allow: /
 
-# Host
-Host: https://www.lifepowertrading.com
+# Prevent indexing of temporary or admin pages (if any)
+Disallow: /api/
+Disallow: /admin/
+Disallow: /tmp/
 
-# Sitemaps
+# Sitemap location
 Sitemap: https://www.lifepowertrading.com/sitemap.xml
