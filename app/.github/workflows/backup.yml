@@ -1,0 +1,32 @@
+name: Auto Backup
+
+on:
+  push:
+    branches: [ main ]     # هر بار که روی main پوش کنی
+  schedule:
+    - cron: '0 1 * * *'    # هر روز ساعت 01:00 UTC هم یک بک‌آپ می‌گیرد (دلخواه)
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mirror main -> backup branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B backup
+          git push origin backup --force
+
+      - name: Create dated tag on scheduled runs
+        if: github.event_name == 'schedule'
+        run: |
+          TAG="backup-$(date -u +'%Y%m%d')"
+          git tag "$TAG"
+          git push origin "$TAG"
